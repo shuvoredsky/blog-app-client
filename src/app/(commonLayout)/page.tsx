@@ -1,11 +1,20 @@
-import { authClient } from "@/lib/auth-client";
+
+import { cookies } from "next/headers";
 import { Button } from "../../components/ui/button";
 
 export default async function Home() {
 
-  const session = authClient.getSession();
+  const cookiesStore = await cookies()
+  console.log(cookiesStore)
 
-  console.log("console from page .tssx", session)
+  const res = await fetch("http://localhost:5000/api/auth/get-session", {
+    headers: {
+      cookie: cookiesStore.toString()
+    },
+    cache: "no-store",
+  })
+  
+  const session = await res.json();
 
   return (
     <div>
